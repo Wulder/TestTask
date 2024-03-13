@@ -6,24 +6,22 @@ using UnityEngine;
 public class FavoriteWindow : Window
 {
 
-    [SerializeField] private UserCardsScrollView _usersList;
+    [SerializeField] private SimpleUsersCatalog _usersList;
 
     private void OnEnable()
     {
-        CreateList();
+        CreateList(); 
     }
 
-    private void OnDisable()
-    {
-        _usersList.ClearPool();
-    }
+    
+
 
     private void CreateList()
     {
         UserData[] allUsers = DataManager.Instance.UsersData;
         UserData[] selection = allUsers.ToList().FindAll(u => DataManager.Instance.Favorites.ContainsUser(u.Id)).ToArray();
 
-        _usersList.Init(selection);
+        _usersList.UpdateList(selection);
     }
    
 }
