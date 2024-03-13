@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -21,11 +19,11 @@ public class UserCard : PoolScrollItem<UserData>
         _title1Text.text = uData.Email;
         _title2Text.text = uData.IpAddress;
 
-       
-        if ( DataManager.Instance.TexturesCaches.ToList().Exists(c => c.Id == uData.Id))
+        string filename = DataManager.Instance.AvatarsData.Data.ToList().Find(u => u.Id == uData.Id).FileName;
+        if ( DataManager.Instance.TexturesCaches.ToList().Exists(c => c.Name == filename))
         {
-            var texCache = DataManager.Instance.TexturesCaches.ToList().Find(c => c.Id == uData.Id);
-            _userIcon.sprite = Sprite.Create(texCache.Texture, new Rect(0,0,256,256), new Vector2(0,0));
+            var texCache = DataManager.Instance.TexturesCaches.ToList().Find(c => c.Name == filename);
+            _userIcon.sprite =texCache.Texture;
         }
         else
         {

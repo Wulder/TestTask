@@ -5,7 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.Tilemaps;
+
 
 
 public class DataManager : Singleton<DataManager>
@@ -235,28 +235,29 @@ public class DataManager : Singleton<DataManager>
         yield return null;
     }
 
-    private void LoadAvatarData()
+    private async void LoadAvatarData()
     {
         if (!File.Exists(@$"{Application.persistentDataPath}/{AvatarsDataUrl}")) 
         {
             
-            AvatarsData = new JsonAvatarsData(5);
+            await Task.Run(() => {
+                while(UsersData == null)
+                {
+
+                }
+            }); //костыль
+
+            AvatarsData = new JsonAvatarsData(UsersData.Length);
             
+            for(int i = 0,j = 1; i < UsersData.Length; i++, j++)
+            {
+                AvatarsData.Data[i].Id = UsersData[i].Id;
+                AvatarsData.Data[i].FileName = $"{j}.png";
+
+                if (j >= 5) j = 0;
+            }
                       
-            AvatarsData.Data[0].Id = 3;
-            AvatarsData.Data[0].FileName = "1.png";
-                      
-            AvatarsData.Data[1].Id = 2;
-            AvatarsData.Data[1].FileName = "2.png";
-                      
-            AvatarsData.Data[2].Id = 4;
-            AvatarsData.Data[2].FileName = "3.png";
-                      
-            AvatarsData.Data[3].Id = 6;
-            AvatarsData.Data[3].FileName = "4.png";
-                      
-            AvatarsData.Data[4].Id = 8;
-            AvatarsData.Data[4].FileName = "5.png";
+      
 
             SaveAvatarData();
             LoadRandomImages();
@@ -285,9 +286,9 @@ public class DataManager : Singleton<DataManager>
             string filePath = $@"{Application.persistentDataPath}/{AvatarsData.Data[i].FileName}";
             Texture2D tex = new Texture2D(256, 256);
             var fileData = File.ReadAllBytes(filePath);
-            tex = new Texture2D(2, 2);
+            tex = new Texture2D(256, 256);
             tex.LoadImage(fileData);
-            TexturesCaches[i] = new TexturesCache(AvatarsData.Data[i].Id, tex);
+            TexturesCaches[i] = new TexturesCache($"{i+1}.png", Sprite.Create(tex, new Rect(0, 0, 256, 256), new Vector2(0, 0)));
         }
         Debug.Log($"Textures cache is ready");
     }
@@ -297,12 +298,12 @@ public class DataManager : Singleton<DataManager>
 
 public struct TexturesCache
 {
-    public TexturesCache(int id, Texture2D tex)
+    public TexturesCache(string name, Sprite tex)
     {
-        Id = id;
+        Name = name;
         Texture = tex;
     }
 
-    public int Id;
-    public Texture2D Texture;
+    public string Name;
+    public Sprite Texture;
 }

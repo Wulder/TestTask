@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -15,7 +13,7 @@ public class ProfileWindow : Window
     private UserData _currentUser;
     public void BackWindow()
     {
-        WindowsManager.Instance.GoToWIndow(WindowsManager.Instance.MainWindow);
+        WindowsManager.Instance.GoToWIndow(WindowsManager.Instance.FavoriteWindow);
     }
 
     public void SetInFavorites(bool val)
@@ -42,10 +40,13 @@ public class ProfileWindow : Window
         else
             _toggle.isOn = false;
 
-        if (DataManager.Instance.TexturesCaches.ToList().Exists(c => c.Id == uData.Id))
+
+        string filename = DataManager.Instance.AvatarsData.Data.ToList().Find(u => u.Id == uData.Id).FileName;
+
+        if (DataManager.Instance.TexturesCaches.ToList().Exists(c => c.Name == filename))
         {
-            var texCache = DataManager.Instance.TexturesCaches.ToList().Find(c => c.Id == uData.Id);
-            _icon.sprite = Sprite.Create(texCache.Texture, new Rect(0, 0, 256, 256), new Vector2(0, 0));
+            var texCache = DataManager.Instance.TexturesCaches.ToList().Find(c => c.Name == filename);
+            _icon.sprite = texCache.Texture;
         }
         else
         {

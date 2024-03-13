@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class WaitLoading : MonoBehaviour
 {
@@ -20,6 +18,7 @@ public class WaitLoading : MonoBehaviour
         {
             _loadingPanel.SetActive(false);
             CancelInvoke(); //колхоз, но я устал
+            WindowsManager.Instance.GoToWIndow(WindowsManager.Instance.MainWindow);
         }
     }
 }
