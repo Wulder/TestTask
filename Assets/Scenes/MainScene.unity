@@ -3411,7 +3411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <WindowName>k__BackingField: favorite
-  _usersList: {fileID: 0}
+  _usersList: {fileID: 2954340388543600191}
 --- !u!1 &1568884427
 GameObject:
   m_ObjectHideFlags: 0
