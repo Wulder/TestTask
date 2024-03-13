@@ -80,7 +80,7 @@ public class PoolScroll<T, I> : MonoBehaviour where I : PoolScrollItem<T>
     {
         if (_currentPointer >= _itemsData.Length - _validPoolSize) return;
         _currentPointer++;
-        UpdateItemsData();
+       
 
 
         OnScrollNext();
@@ -97,12 +97,12 @@ public class PoolScroll<T, I> : MonoBehaviour where I : PoolScrollItem<T>
     }
     protected virtual void OnScrollPreview()
     {
-
+        UpdateItemsData();
     }
 
     protected virtual void OnScrollNext()
     {
-
+        OnScrollPreview();
     }
 
     protected virtual void OnScroll()

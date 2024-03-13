@@ -6,12 +6,11 @@ public class UserCardsScrollView : PoolScroll<UserData, UserCard>
 {
     [SerializeField] private RectTransform _topOffset, _bottomOffset;
     [SerializeField] private float _itemHeight;
-    [SerializeField] private int _poolUpdateItemsCount = 1;
+   private int _poolUpdateItemsCount = 1; 
 
 
     private float _prevScrollValue = 0;
     private int _prevDirection = 0;
-    private float _itemScrollStep => 1f / (float)ItemsData.Length;
 
 
     protected override UserCard CreateItem(int id)
@@ -27,13 +26,17 @@ public class UserCardsScrollView : PoolScroll<UserData, UserCard>
         _topOffset.sizeDelta = new Vector2(_topOffset.sizeDelta.x, 0);
         _bottomOffset.sizeDelta = new Vector2(_bottomOffset.sizeDelta.x, _itemHeight * (ItemsData.Length - _validPoolSize));
 
+        _poolUpdateItemsCount = _validPoolSize / 2;
+
         _prevScrollValue = 0;
+        _prevDirection = 1;
     }
 
     protected override void OnScroll()
     {
+
         var topOffsetHeight = _itemHeight * Pointer;
-        var bottomOffsetHeight = _itemHeight * (ItemsData.Length - _validPoolSize) - topOffsetHeight;
+        var bottomOffsetHeight = _itemHeight * (ItemsData.Length - _validPoolSize - Pointer);
 
         _topOffset.sizeDelta = new Vector2(_topOffset.sizeDelta.x, topOffsetHeight);
         _bottomOffset.sizeDelta = new Vector2(_bottomOffset.sizeDelta.x, bottomOffsetHeight);
@@ -43,36 +46,37 @@ public class UserCardsScrollView : PoolScroll<UserData, UserCard>
     {
         float invertedValue = (1 - vec.y);
         float scrollDela = invertedValue - _prevScrollValue;
+        float _itemScrollStep = 1f / ItemsData.Length * _poolUpdateItemsCount;
 
-        float step = _itemScrollStep * _poolUpdateItemsCount;
+
+
 
         int sign = Math.Sign(scrollDela);
 
-       if(sign < 0 && _prevDirection > 0)
+        if(sign != _prevDirection)
         {
-            _prevScrollValue = _prevScrollValue + _itemScrollStep * _poolUpdateItemsCount;
+            _itemScrollStep = 1f / ItemsData.Length;
         }
 
-        if (Mathf.Abs(scrollDela) > step)
+        if(Math.Abs(scrollDela) >= _itemScrollStep)
         {
-
-            if (Mathf.Sign(scrollDela) > 0)
+            Debug.Log("scroll by delta");
+            if (scrollDela > 0)
             {
                 for (int i = 0; i < _poolUpdateItemsCount; i++)
                     ScrollNext();
             }
-            else
+            if(scrollDela < 0)
             {
                 for (int i = 0; i < _poolUpdateItemsCount; i++)
                     ScrollPreview();
+
             }
+
 
             _prevDirection = sign;
             _prevScrollValue = invertedValue;
-
-
         }
-
 
     }
 }
